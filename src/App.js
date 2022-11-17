@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import React from "react";
 
-function App() {
+const baseURL = "https://express-taller-production.up.railway.app/api/products";
+
+export default function App() {
+  const [post, setPost] = React.useState(null);
+
+  React.useEffect(() => {
+    axios.get(baseURL).then((response) => {
+      setPost(response.data);
+    });
+  }, []);
+
+  if (!post) return null;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <div className="row">
+        {
+          post.map((item) => {
+            return (
+              <div className="card" key={item._id}>
+                <h1>{item.name}</h1>
+                <p>{item.description}</p>
+                <p> $ {item.price}</p>
+                <p>Quantity: {item.stock}</p>
+              </div>
+            );
+          })
+        }
+      </div>
     </div>
   );
 }
-
-export default App;
